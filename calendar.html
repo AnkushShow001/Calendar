@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Calendar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f0f0f0;
+    }
+    .calendar-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .calendar-header h2 {
+      margin: 0;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .calendar-weekdays, .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-top: 10px;
+      text-align: center;
+    }
+    .calendar-weekdays div {
+      font-weight: bold;
+    }
+    .calendar-days div {
+      padding: 10px 0;
+      margin: 2px;
+      border-radius: 5px;
+    }
+    .calendar-days div.today {
+      background: #3498db;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <button id="prev">&#10094;</button>
+      <h2 id="month-year"></h2>
+      <button id="next">&#10095;</button>
+    </div>
+    <div class="calendar-weekdays">
+      <div>Sun</div>
+      <div>Mon</div>
+      <div>Tue</div>
+      <div>Wed</div>
+      <div>Thu</div>
+      <div>Fri</div>
+      <div>Sat</div>
+    </div>
+    <div class="calendar-days" id="calendar-days"></div>
+  </div>
+
+  <script>
+    const calendarDays = document.getElementById("calendar-days");
+    const monthYear = document.getElementById("month-year");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    function showCalendar(month, year) {
+      calendarDays.innerHTML = "";
+      monthYear.innerText = `${months[month]} ${year}`;
+
+      let firstDay = new Date(year, month, 1).getDay();
+      let daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+      
+      for(let i = 0; i < firstDay; i++) {
+        let blank = document.createElement("div");
+        calendarDays.appendChild(blank);
+      }
+
+      
+      for(let day = 1; day <= daysInMonth; day++) {
+        let dayDiv = document.createElement("div");
+        dayDiv.innerText = day;
+
+        if(day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+          dayDiv.classList.add("today");
+        }
+
+        calendarDays.appendChild(dayDiv);
+      }
+    }
+
+    prevBtn.addEventListener("click", () => {
+      currentMonth--;
+      if(currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+      showCalendar(currentMonth, currentYear);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentMonth++;
+      if(currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      showCalendar(currentMonth, currentYear);
+    });
+
+    showCalendar(currentMonth, currentYear);
+  </script>
+</body>
+</html>
